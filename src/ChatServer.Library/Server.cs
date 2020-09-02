@@ -11,8 +11,8 @@ namespace ChatServer.Library
     public class Server
     {
         public Dictionary<string, ChatUser> ActiveUsers { get; set; }
-        public ILogger Logger 
-        { 
+        public ILogger Logger
+        {
             get
             {
                 return _authenticator.Logger;
@@ -21,15 +21,35 @@ namespace ChatServer.Library
             {
                 _authenticator.Logger = value;
                 _receiver.Logger = value;
-                foreach(var broadcaster in _broadcasters)
+                foreach (var broadcaster in _broadcasters)
                 {
                     broadcaster.Logger = value;
                 }
             }
         }
 
-        public int AuthenticationPort { get; set; }
-        public int ReceivePort { get; set; }
+        public int AuthenticationPort 
+        { 
+            get 
+            {
+                return _authenticator.ListenPort;
+            } 
+            set 
+            {
+                _authenticator.ListenPort = value;
+            } 
+        }
+        public int ReceivePort
+        {
+            get
+            {
+                return _receiver.ListenPort;
+            }
+            set
+            {
+                _receiver.ListenPort = value;
+            }
+        }
         public int BroadcastPort { get; set; }
         public int MaxConcurrentUsers { get; private set; }
         private static Server _instance = null;
@@ -45,7 +65,7 @@ namespace ChatServer.Library
         {
             ActiveUsers = new Dictionary<string, ChatUser>();
             MaxConcurrentUsers = maxConcurrentUsers;
-            for(int i = 0; i < MaxConcurrentUsers; i++)
+            for (int i = 0; i < MaxConcurrentUsers; i++)
             {
                 _broadcasters.Add(new Broadcaster());
                 _broadcasters[i].Id = i;
@@ -61,7 +81,7 @@ namespace ChatServer.Library
 
         public void MessageReceived(ChatUser user, string message)
         {
-            foreach(var broadcaster in _broadcasters)
+            foreach (var broadcaster in _broadcasters)
             {
                 broadcaster.AddMessage(user, message);
             }
@@ -91,7 +111,7 @@ namespace ChatServer.Library
 
         public static Server GetInstance()
         {
-            if(_instance == null)
+            if (_instance == null)
             {
                 _instance = new Server();
             }

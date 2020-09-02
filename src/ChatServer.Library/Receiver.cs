@@ -28,7 +28,7 @@ namespace ChatServer.Library
             listener.Start();
             while (IsRunning)
             {
-                Logger.Log("Receiver waiting for connection...");
+                Logger.Log("Receiver waiting for connection on port {0}...", ListenPort);
                 TcpClient client = null;
                 try
                 {
@@ -45,7 +45,7 @@ namespace ChatServer.Library
                     Logger.Log("Could not accept TCP client: {0}", ex.Message);
                     continue;
                 }
-                Logger.Log("Receiver accepting client: {1}", client.Client.RemoteEndPoint);
+                Logger.Log("Receiver accepting client: {0}", client.Client.RemoteEndPoint);
 
                 BinaryReader reader = null;
                 BinaryWriter writer = null;
@@ -67,6 +67,8 @@ namespace ChatServer.Library
                         byte[] messageBytes = reader.ReadBytes(messageLength);
                         string message = Encoding.UTF8.GetString(messageBytes);
                         Server.MessageReceived(Server.ActiveUsers[authKey], message);
+
+                        Logger.Log("{0} says: {1}", Server.ActiveUsers[authKey].Name, message);
                     }
 
                 }

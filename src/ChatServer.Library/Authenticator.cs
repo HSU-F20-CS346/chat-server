@@ -27,7 +27,7 @@ namespace ChatServer.Library
             listener.Start();
             while (IsRunning)
             {
-                Logger.Log("Authenticator waiting for connection...");
+                Logger.Log("Authenticator waiting for connection on port {0}...", ListenPort);
                 TcpClient client = null;
                 try
                 {
@@ -44,7 +44,7 @@ namespace ChatServer.Library
                     Logger.Log("Could not accept TCP client: {0}", ex.Message);
                     continue;
                 }
-                Logger.Log("Authenticator accepting client: {1}", client.Client.RemoteEndPoint);
+                Logger.Log("Authenticator accepting client: {0}", client.Client.RemoteEndPoint);
 
                 BinaryReader reader = null;
                 BinaryWriter writer = null;

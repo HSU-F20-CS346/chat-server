@@ -79,6 +79,7 @@ namespace ChatServer.Library
                                 byte[] messageBytes = Encoding.UTF8.GetBytes(message.Value);
                                 writer.Write(IPAddress.HostToNetworkOrder(messageBytes.Length));
                                 writer.Write(messageBytes);
+                                stream.Flush();
                             }
                             else
                             {
