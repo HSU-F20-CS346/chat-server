@@ -75,8 +75,9 @@ namespace ChatServer.Library
                     Server.ActiveUsers[user.AuthString] = user;
 
                     //return access key to client
-                    writer.Write(IPAddress.HostToNetworkOrder(user.AuthString.Length));
-                    writer.Write(Encoding.UTF8.GetBytes(user.AuthString));
+                    byte[] authBytes = Encoding.UTF8.GetBytes(user.AuthString);
+                    writer.Write(IPAddress.HostToNetworkOrder(authBytes.Length));
+                    writer.Write(authBytes);
 
                 }
                 catch (Exception ex)
